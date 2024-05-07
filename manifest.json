@@ -1,0 +1,39 @@
+{
+    "manifest_version": 2,
+    "name": "Server Jenkins Firefox Extension",
+    "version": "0.0.1",
+    "description": "Made by @a-dubs",
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{123695fd-3a90-159c-a45d-fabd6969f321}"
+        }
+    },
+    "permissions": [
+        "activeTab",
+        "http://localhost/*",
+        "https://jenkins.canonical.com/server-team/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "http://localhost/*",
+                "https://jenkins.canonical.com/server-team/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_end" 
+        }
+    ],
+    "icons": {
+        "48": "jenkins.png"
+    },
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "jenkins.png",
+            "48": "jenkins.png",
+            "128": "jenkins.png"
+        }
+    }
+}
