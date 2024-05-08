@@ -40,6 +40,11 @@ for item in data:
             grouped_data[job_name] = []
         grouped_data[job_name].append(item)
 
+# sort each group by build_no so most recent builds are at the top
+for job_name, items in grouped_data.items():
+    items.sort(key=lambda x: x['build_no'], reverse=True)
+
+
 
 
 def createTestHyperlink(url):
