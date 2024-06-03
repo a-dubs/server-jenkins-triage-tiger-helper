@@ -25,8 +25,8 @@
 # 6. test_report_page_url
 # the table should be sorted by build_no in descending order
 
+import datetime
 import json
-import subprocess
 
 # read the json file
 with open('payload.json', 'r') as f:
@@ -49,7 +49,6 @@ for job_name, items in grouped_data.items():
 
 
 def createTestHyperlink(url):
-    # https://jenkins.canonical.com/server-team/view/cloud-init/testReport/junit/tests.integration_tests.modules/test_version_change/test_reboot_without_version_change/
     hyperlink = f'<a target="_blank" href={url}>'
     hyperlink += str(url.split("/junit/")[1]).replace("/", ".").strip(". ").rsplit(".", maxsplit=1)[1]
     hyperlink += "</a>"
@@ -116,7 +115,7 @@ with open('triage-tiger.html', 'w') as f:
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cloud-Init Jenkins Results</title>
+    <title>Triage Tiger Jenkins Results</title>
     <style>
         .collapse-button {
             background-color: #777;
@@ -153,6 +152,11 @@ with open('triage-tiger.html', 'w') as f:
 </head>
 <body>
 ''')
+    f.write('<h1>Triage Tiger Jenkins Results</h1>')
+    # add a last updated at timestamp
+    f.write('<p>Last Updated: ')
+    f.write(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    f.write('</p><br>')
     f.write(toc)
     f.write('\n'.join(tables))
     f.write('''
