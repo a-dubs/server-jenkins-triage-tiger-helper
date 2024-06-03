@@ -4,6 +4,10 @@ function cleanupExisting() {
     if (customBranding) {
         customBranding.remove()
     }
+    const fetchButton = document.querySelector('.fetch-button')
+    if (fetchButton) {
+        fetchButton.remove()
+    }
 }
 
 function modifyBanner() {
@@ -84,6 +88,7 @@ function createFetchButton() {
     fetchButton.style.borderRadius = '5px';
     fetchButton.style.cursor = 'pointer';
     fetchButton.style.zIndex = '9999';
+    fetchButton.classList.add('fetch-button');
     fetchButton.onclick = () => {
         console.log('fetch button clicked');
         console.log("crawling all integration jobs")
