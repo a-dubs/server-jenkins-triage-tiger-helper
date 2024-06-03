@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "Server Jenkins Firefox Extension",
+    "name": "Server Jenkins Triage Tiger Helper",
     "version": "0.0.1",
     "description": "Made by @a-dubs",
     "browser_specific_settings": {

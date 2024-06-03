@@ -32,8 +32,8 @@ def payload():
     print("merged payload length:", len(merged_payload))
     with open('payload.json', 'w') as f:
         json.dump(merged_payload, f)
-    # run analyze.py
-    subprocess.run(["python", "analyze.py"])
+    # generate the html tables
+    subprocess.run(["python", "generate-html.py"])
     return jsonify({'message': 'Payload received and merged successfully!'}), 200
 
 # endpoint that returns the latest date of the payload data
