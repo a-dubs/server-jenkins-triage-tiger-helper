@@ -29,13 +29,13 @@ import datetime
 import json
 
 # read the json file
-with open('payload.json', 'r') as f:
+with open("payload.json", "r") as f:
     data = json.load(f)
 
 # group the data by job_name
 grouped_data = {}
 for item in data:
-    job_name = item['job_name']
+    job_name = item["job_name"]
     if "ibm" not in job_name:
         if job_name not in grouped_data:
             grouped_data[job_name] = []
@@ -43,9 +43,7 @@ for item in data:
 
 # sort each group by build_no so most recent builds are at the top
 for job_name, items in grouped_data.items():
-    items.sort(key=lambda x: x['build_no'], reverse=True)
-
-
+    items.sort(key=lambda x: x["build_no"], reverse=True)
 
 
 def createTestHyperlink(url):
@@ -54,29 +52,31 @@ def createTestHyperlink(url):
     hyperlink += "</a>"
     return hyperlink
 
+
 def createAllTestsHyperlinkHTML(failed_tests):
     return "<br>".join([createTestHyperlink(test) for test in failed_tests])
 
+
 # table of contents
 # create a table that has columns of job_name (hyperlink to table below), date, and jobs that are failing
-toc = '<h1>Table of Contents</h1>'
+toc = "<h1>Table of Contents</h1>"
 toc += '<table border="1"  style="margin-bottom: 200px;">'
-toc += '<tr>'
-toc += '<th>job_name</th>'
-toc += '<th>date</th>'
-toc += '<th>failed_tests</th>'
-toc += '</tr>'
+toc += "<tr>"
+toc += "<th>job_name</th>"
+toc += "<th>date</th>"
+toc += "<th>failed_tests</th>"
+toc += "</tr>"
 for job_name, items in grouped_data.items():
     item = items[0]
-    toc += '<tr>'
+    toc += "<tr>"
     toc += f'<td><a href="#{job_name}">{job_name}</a></td>'
     toc += f'<td>{item["datetime"]}</td>'
     toc += '<td><div class="scrollable-cell-content">'
     toc += createAllTestsHyperlinkHTML(item["failed_tests"])
-    toc += '</div></td>'
-    toc += '</tr>'
-toc += '</table>'
-toc += '<br>'
+    toc += "</div></td>"
+    toc += "</tr>"
+toc += "</table>"
+toc += "<br>"
 
 
 # create the html tables
@@ -86,32 +86,33 @@ for job_name, items in grouped_data.items():
     table += '<button type="button" class="collapse-button">Toggle Table</button>'
     table += '<div class="content">'
     table += '<table border="1" style="margin-bottom: 200px;">'
-    table += '<tr>'
-    table += '<th>build_no</th>'
-    table += '<th>datetime</th>'
-    table += '<th>failed_tests</th>'
-    table += '<th>build_url</th>'
-    table += '<th>test_report_page_url</th>'
-    table += '</tr>'
-    items.sort(key=lambda x: x['build_no'], reverse=True)
+    table += "<tr>"
+    table += "<th>build_no</th>"
+    table += "<th>datetime</th>"
+    table += "<th>failed_tests</th>"
+    table += "<th>build_url</th>"
+    table += "<th>test_report_page_url</th>"
+    table += "</tr>"
+    items.sort(key=lambda x: x["build_no"], reverse=True)
     for item in items:
-        table += '<tr>'
+        table += "<tr>"
         table += f'<td>{item["build_no"]}</td>'
         table += f'<td style="white-space: nowrap;">{item["datetime"]}</td>'
         table += '<td><div class="scrollable-cell-content">'
         table += createAllTestsHyperlinkHTML(item["failed_tests"])
-        table += '</div></td>'
+        table += "</div></td>"
         table += f'<td><div class="tiny-link-cell"><a target="_blank" href="{item["build_url"]}">{item["build_url"]}</a></div></td>'
         table += f'<td><div class="tiny-link-cell"><a target="_blank" href="{item["test_report_page_url"]}">{item["test_report_page_url"]}</a></div></td>'
-        table += '</tr>'
-    table += '</table>'
-    table += '</div>'
+        table += "</tr>"
+    table += "</table>"
+    table += "</div>"
     tables.append(table)
 
 
 # write the html file
-with open('triage-tiger.html', 'w') as f:
-    f.write('''
+with open("triage-tiger.html", "w") as f:
+    f.write(
+        """
 <!DOCTYPE html>
 <html>
 <head>
@@ -151,15 +152,17 @@ with open('triage-tiger.html', 'w') as f:
     </style>
 </head>
 <body>
-''')
-    f.write('<h1>Triage Tiger Jenkins Results</h1>')
+"""
+    )
+    f.write("<h1>Triage Tiger Jenkins Results</h1>")
     # add a last updated at timestamp
-    f.write('<p>Last Updated: ')
+    f.write("<p>Last Updated: ")
     f.write(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    f.write('</p><br>')
+    f.write("</p><br>")
     f.write(toc)
-    f.write('\n'.join(tables))
-    f.write('''
+    f.write("\n".join(tables))
+    f.write(
+        """
 <script>
     var coll = document.getElementsByClassName("collapse-button");
     var i;
@@ -178,6 +181,7 @@ with open('triage-tiger.html', 'w') as f:
 </script>
 </body>
 </html>
-''')
+"""
+    )
 
 print("triage-tiger.html created successfully!")
