@@ -26,6 +26,7 @@
 # the table should be sorted by build_no in descending order
 
 import json
+import subprocess
 
 # read the json file
 with open('payload.json', 'r') as f:
@@ -110,7 +111,7 @@ for job_name, items in grouped_data.items():
 
 
 # write the html file
-with open('output.html', 'w') as f:
+with open('triage-tiger.html', 'w') as f:
     f.write('''
 <!DOCTYPE html>
 <html>
@@ -175,4 +176,5 @@ with open('output.html', 'w') as f:
 </html>
 ''')
 
-print("output.html created successfully!")
+print("triage-tiger.html created successfully!")
+subprocess.run(["xdg-open", "triage-tiger.html"])
