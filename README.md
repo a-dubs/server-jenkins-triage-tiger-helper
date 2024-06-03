@@ -47,7 +47,8 @@ or when trying to gather all this information via the jenkins API.
 ### To Add Persistently:
 1. Open Firefox and navigate to `about:addons`.
 2. Click on the gear cog icon ⚙️ in the top right and click on the `Install Add-On From File` option.
-3. 
+3. Navigate to the folder you checkout this repo to on your local machine.
+5. Select the most recent `.xpi` file in `releases` directory inside the project directory.
 
 ### Setting Up the Backend
 1. Ensure you have Python and any dependencies installed. You can install the dependencies using pip:
