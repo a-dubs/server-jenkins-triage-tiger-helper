@@ -177,4 +177,3 @@ with open('triage-tiger.html', 'w') as f:
 ''')
 
 print("triage-tiger.html created successfully!")
-subprocess.run(["xdg-open", "triage-tiger.html"])
