@@ -1,11 +1,5 @@
 /.venv
 /.vscode
-/analyze.ipynb
-/cloud-init-jenkins-results-04-01-24.html
-/create_html.ipynb
-/json_to_csv.py
-/triage-tiger.html
-/payload copy.json
-/payload.json
-/test.py
 /web-ext-artifacts/*
+*.html
+*.json
