@@ -44,7 +44,7 @@ or when trying to gather all this information via the jenkins API.
 4. Navigate to the folder you checkout this repo to on your local machine.
 5. Select the `manifest.json` file in the project directory.
 
-### To Add Persistently:
+#### To Add Persistently:
 1. Open Firefox and navigate to `about:addons`.
 2. Click on the gear cog icon ⚙️ in the top right and click on the `Install Add-On From File` option.
 3. Navigate to the folder you checkout this repo to on your local machine.
