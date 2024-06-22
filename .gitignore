@@ -1,5 +1,6 @@
 /.venv
 /.vscode
+/.python-version
 /web-ext-artifacts/*
 *.html
 *.json

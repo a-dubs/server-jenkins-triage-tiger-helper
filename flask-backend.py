@@ -3,9 +3,11 @@
 # The backend will also return a 200 and a happy message to the client
 # when the payload is received and saved successfully
 
-from flask import Flask, request, jsonify
+import datetime
 import json
 import subprocess
+
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -26,28 +28,38 @@ def merge_lists_of_dicts(list1, list2):
 
 @app.route("/payload", methods=["POST"])
 def payload():
-    payload = request.get_json()
-    with open("payload.json", "r") as f:
-        existing_payload = json.load(f)
+    request_payload = request.get_json()
+    try:
+        with open("payload.json", "r", encoding="utf-8") as f:
+            existing_payload = json.load(f)
+    except FileNotFoundError:
+        existing_payload = []
     print("existing payload length:", len(existing_payload))
-    merged_payload = merge_lists_of_dicts(existing_payload, payload)
+    merged_payload = merge_lists_of_dicts(existing_payload, request_payload)
     print("merged payload length:", len(merged_payload))
-    with open("payload.json", "w") as f:
+    with open("payload.json", "w", encoding="utf-8") as f:
         json.dump(merged_payload, f)
     # generate the html tables
-    subprocess.run(["python", "generate-html.py"])
-    return jsonify({"message": "Payload received and merged successfully!"}), 200
+    subprocess.run(["python", "generate-html.py"], check=True)
+    return (
+        jsonify({"message": "Payload received and merged successfully!"}),
+        200,
+    )
 
 
 # endpoint that returns the latest date of the payload data
 @app.route("/num-jobs-to-fetch", methods=["GET"])
 def num_jobs_to_fetch():
-    with open("payload.json", "r") as f:
-        data = json.load(f)
+    try:
+        with open("payload.json", "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        return jsonify({"num_jobs_to_fetch": 1}), 200
     # get the "datetime" key from all the items in the payload and keep the latest date
     # in the format of "May 5, 2024, 6:41:10 PM"
-    latest_job = max([str(item["datetime"]).rsplit(",", maxsplit=1)[0] for item in data])
-    import datetime
+    latest_job = max(
+        [str(item["datetime"]).rsplit(",", maxsplit=1)[0] for item in data]
+    )
 
     latest_job_datetime = datetime.datetime.strptime(latest_job, "%B %d, %Y")
     # get number of days since the latest date and then add 1
