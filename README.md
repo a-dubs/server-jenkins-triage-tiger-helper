@@ -1,5 +1,5 @@
 # Server Jenkins Triage Tiger Helper
-![Static Badge](https://img.shields.io/badge/version-v0.1.3-blue)
+![Static Badge](https://img.shields.io/badge/version-v0.1.4-blue)
 
 ## Purpose
 The **Server Jenkins Triage Tiger Helper** is a Firefox extension designed to scrape integration jobs results from jenkins and send it to a local backend server.
