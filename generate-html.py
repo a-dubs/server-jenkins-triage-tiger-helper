@@ -46,15 +46,19 @@ for job_name, items in grouped_data.items():
     items.sort(key=lambda x: x["build_no"], reverse=True)
 
 
-def createTestHyperlink(url):
-    hyperlink = f'<a target="_blank" href={url}>'
-    hyperlink += str(url.split("/junit/")[1]).replace("/", ".").strip(". ").rsplit(".", maxsplit=1)[1]
-    hyperlink += "</a>"
-    return hyperlink
+def createTestHyperlink(url: str) -> str | None:
+    try:
+        hyperlink = f'<a target="_blank" href={url}>'
+        hyperlink += str(url.split("/junit/")[1]).replace("/", ".").strip(". ").rsplit(".", maxsplit=1)[1]
+        hyperlink += "</a>"
+        return hyperlink
+    except IndexError as e:
+        print("Error creating hyperlink for:", url)
+        return None
 
 
 def createAllTestsHyperlinkHTML(failed_tests):
-    return "<br>".join([createTestHyperlink(test) for test in failed_tests])
+    return "<br>".join([result for test in failed_tests if (result:=createTestHyperlink(test))])
 
 
 # table of contents
