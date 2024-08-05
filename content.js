@@ -55,6 +55,18 @@ function ensureBackendIsRunning() {
     }); 
 }
 
+function updateFetchButtonProgress(jobs_done, total_jobs) {
+    const fetchButton = document.querySelector('.fetch-button')
+    fetchButton.textContent = `Fetching cloud-init jobs results... ${jobs_done}/${total_jobs}`;
+    const spinner_url = "https://global.discourse-cdn.com/sitepoint/original/3X/e/3/e352b26bbfa8b233050087d6cb32667da3ff809c.gif";
+    const spinner = document.createElement('img');
+    spinner.src = spinner_url;
+    spinner.style.width = '20px';   
+    spinner.style.height = '20px';
+    spinner.style.marginLeft = '10px';
+    fetchButton.appendChild(spinner);
+}
+
 function makeFetchButtonIntoSpinner() {
     const fetchButton = document.querySelector('.fetch-button')
     fetchButton.textContent = 'Fetching cloud-init jobs results...';
@@ -106,7 +118,7 @@ async function getNumberOfJobsToFetch() {
     try {
         const response = await fetch('http://localhost:6969/num-jobs-to-fetch');
         const data = await response.json();
-        alert(`Scraping ${data.num_jobs_to_fetch} most recent jobs. This may take 5-15 minutes if the max number of jobs (30) need scraped.`);
+        alert(`Scraping ${data.num_jobs_to_fetch} most recent jobs. This may take up to 5 minutes if the max number of jobs (30) need scraped.`);
         makeFetchButtonIntoSpinner();
         return data.num_jobs_to_fetch;
     }
@@ -197,6 +209,7 @@ async function crawlAllIntegrationJobs() {
     const total = Object.keys(jobBuilds).length;
     for (const [jobUrl, buildUrls] of Object.entries(jobBuilds)) {
         count += 1;
+        updateFetchButtonProgress(count, total);
         console.log(`[${count}/${total}]  processing ${buildUrls.length} number of builds for job ${jobUrl}`)
         for (const buildUrl of buildUrls) {
             const doc = await fetchDocument(buildUrl);
