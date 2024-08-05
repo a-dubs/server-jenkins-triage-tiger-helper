@@ -30,26 +30,23 @@ function modifyBanner() {
     target_div.appendChild(custom_branding);
 }
 
-function ensureBackendIsRunning() {
-    // check if the backend is running
-    fetch('http://localhost:6969/ping')
-    .then(response => response.json())
-    .then(data => {
-        // make sure we receive a pong response {"message": "pong"}
+async function ensureBackendIsRunning() {
+    try {
+        const response = await fetch('http://localhost:6969/ping');
+        const data = await response.json();
+
         if (data.message === "pong") {
-            console.log("Backend is running!")
+            console.log("Backend is running!");
             return true;
-        }
-        else {
+        } else {
             alert("Error connecting to backend server. Please ensure the triage-tiger server is running and try again.");
             return false;
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error:', error);
         alert("Error connecting to server. Please ensure the triage-tiger server is running and try again.");
         return false;
-    }); 
+    }
 }
 
 function updateFetchButtonProgress(jobs_done, total_jobs) {
@@ -162,10 +159,12 @@ function createFetchButton() {
     fetchButton.onclick = () => {
         console.log('fetch button clicked');
         console.log("crawling all integration jobs")
-        const isReady = ensureBackendIsRunning();
-        if (isReady) {
-            crawlAllIntegrationJobs();
-        }
+        ensureBackendIsRunning().then(isRunning => {
+            console.log("Backend running status:", isRunning);
+            if (isRunning) {
+                crawlAllIntegrationJobs();
+            }
+        });
     }
 
     const target_div = document.querySelector("#page-header .logo");
