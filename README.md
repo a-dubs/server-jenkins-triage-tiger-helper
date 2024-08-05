@@ -67,7 +67,7 @@ or when trying to gather all this information via the jenkins API.
 4. Press the "Fetch job results" button and just wait.
 5. The browser extension will ask the backend many days it has been since jobs were last scraped so that it scrapes the minimum amount of jobs necessary to avoid unnecessary load being put on the jenkins server.
 6. Then the browser extension will automatically go and scrape all the jobs necessary.
-7. Open your firefox developer console to see the progress of the scraping.
+7. You will be alerted when the scraping begins and when it ends and whether it was succesfull or not.
 
 ### Viewing the Generated HTML Site
 1. Once the backend has processed the data, it will generate an HTML file named `triage-tiger.html`.
