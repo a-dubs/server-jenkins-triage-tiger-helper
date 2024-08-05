@@ -32,6 +32,12 @@ def get_latest_datetime_str(dates: list[str]) -> datetime:
 
 
 
+# create ping endpoint 
+@app.route("/ping", methods=["GET"])
+def ping():
+    return jsonify({"message": "pong"}), 200
+
+
 @app.route("/payload", methods=["POST"])
 def payload():
     payload = request.get_json()
