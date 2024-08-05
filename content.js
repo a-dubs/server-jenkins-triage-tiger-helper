@@ -47,13 +47,7 @@ function ensureBackendIsRunning() {
     })
     .catch(error => {
         console.error('Error:', error);
-        if (error.message.includes("TypeError: NetworkError when attempting to fetch resource."))
-        {
-            alert("Error connecting to server. Please ensure the triage-tiger server is running and try again.");
-        }
-        else {
-            alert("Error connecting to server. Check console logs for more info or please file a bug: ");
-        }
+        alert("Error connecting to server. Please ensure the triage-tiger server is running and try again.");
         return false;
     }); 
 }
