@@ -7,7 +7,7 @@ function cleanupExisting() {
     const fetchButton = document.querySelector('.fetch-button')
     if (fetchButton) {
         fetchButton.remove()
-    }
+    } 
 }
 
 function modifyBanner() {
@@ -30,6 +30,25 @@ function modifyBanner() {
     target_div.appendChild(custom_branding);
 }
 
+function makeFetchButtonIntoSpinner() {
+    const fetchButton = document.querySelector('.fetch-button')
+    fetchButton.textContent = 'Fetching cloud-init jobs results...';
+    fetchButton.color = '#05e679';
+    fetchButton.disabled = true;
+    const spinner_url = "https://global.discourse-cdn.com/sitepoint/original/3X/e/3/e352b26bbfa8b233050087d6cb32667da3ff809c.gif";
+    const spinner = document.createElement('img');
+    spinner.src = spinner_url;
+    spinner.style.width = '20px';   
+    spinner.style.height = '20px';
+    spinner.style.marginLeft = '10px';
+    fetchButton.appendChild(spinner);
+}
+
+function removeFetchButtonUponSuccess () {  
+    const fetchButton = document.querySelector('.fetch-button')
+    fetchButton.remove()
+}
+
 function sendPayload(payload) {
     fetch('http://localhost:6969/payload', {
         method: 'POST',
@@ -41,9 +60,20 @@ function sendPayload(payload) {
     .then(response => response.json())
     .then(data => {
         console.log(data.message);
+        // alert the user that the data was successfully sent
+        alert("Successfully scraped all job data and sent to server. Check for the triage-tiger.html file in the directory where you cloned the triage-tiger repo.");
+        // remove the fetch button
+        removeFetchButtonUponSuccess();
     })
     .catch(error => {
         console.error('Error:', error);
+        if (error.message.includes("TypeError: NetworkError when attempting to fetch resource."))
+        {
+            alert("Error sending data to server. Please ensure the triage-tiger server is running and try again.");
+        }
+        else {
+            alert("Error sending data to server. Check console logs for more info or please file a bug: https://github.com/a-dubs/server-jenkins-triage-tiger-helper/issues/new");
+        }
     });
 }
 
@@ -51,10 +81,16 @@ async function getNumberOfJobsToFetch() {
     try {
         const response = await fetch('http://localhost:6969/num-jobs-to-fetch');
         const data = await response.json();
+        alert(`Scraping ${data.num_jobs_to_fetch} most recent jobs. This may take 5-15 minutes if the max number of jobs (30) need scraped.`);
+        makeFetchButtonIntoSpinner();
         return data.num_jobs_to_fetch;
     }
     catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error); 
+        if (error.message.includes("TypeError: NetworkError when attempting to fetch resource."))
+        {
+            alert("Error fetching number of jobs to scrape. Please ensure the triage-tiger server is running and try again.");
+        }
     }
 }
 
@@ -126,6 +162,9 @@ async function crawlAllIntegrationJobs() {
         // console.log(url, jobBuildsList);
     }));
     console.log("jobBuilds", jobBuilds)
+    // get total number of builds to fetch
+    const totalBuilds = Object.values(jobBuilds).reduce((acc, val) => acc + val.length, 0);
+    console.log("TOTAL NUMBER OF BUILDS BEING SCRAPED:", totalBuilds)
     const testReports = []
     console.log("Creating test reports")
     var count = 0;
