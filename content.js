@@ -38,9 +38,11 @@ function ensureBackendIsRunning() {
         // make sure we receive a pong response {"message": "pong"}
         if (data.message === "pong") {
             console.log("Backend is running!")
+            return true;
         }
         else {
             alert("Error connecting to backend server. Please ensure the triage-tiger server is running and try again.");
+            return false;
         }
     })
     .catch(error => {
@@ -52,6 +54,7 @@ function ensureBackendIsRunning() {
         else {
             alert("Error connecting to server. Check console logs for more info or please file a bug: ");
         }
+        return false;
     }); 
 }
 
@@ -137,7 +140,6 @@ function main() {
     // Check if the current site's base URL is localhost:8080
     if (window.location.href.includes('jenkins.canonical.com/server-team')) {
         console.log("--- Server Jenkins Extension ---")
-        ensureBackendIsRunning()
         cleanupExisting()
         modifyBanner()
         if (window.location.href === "https://jenkins.canonical.com/server-team/view/cloud-init/") {
@@ -166,7 +168,10 @@ function createFetchButton() {
     fetchButton.onclick = () => {
         console.log('fetch button clicked');
         console.log("crawling all integration jobs")
-        crawlAllIntegrationJobs();
+        const isReady = ensureBackendIsRunning();
+        if (isReady) {
+            crawlAllIntegrationJobs();
+        }
     }
 
     const target_div = document.querySelector("#page-header .logo");
